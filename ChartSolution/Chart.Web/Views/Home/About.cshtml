@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "About";
+    var chart = new Chart();
+    chart.Rows = 4;
+    chart.Columns = 4;
+}
+
+<div class="gridster">
+    <ul>
+        @for (int x = 1; x <= chart.Rows; x++)
+        {
+            for (int y = 1; y <= chart.Columns; y++)
+            {
+                <li data-row="@x" data-col="@y" data-sizex="1" data-sizey="1">
+                    <div id="@string.Format("container-{0}-{1}", x, y)" style="width: 100%; height: 100%; border: 1px solid black;"></div>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@functions {
+    public class Chart
+    {
+        public int Rows { get; set; }
+        public int Columns { get; set; }
+    }
+}
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $(".gridster ul").gridster({
+                widget_margins: [10, 10],
+                widget_base_dimensions: [350, 400]
+            });
+
+            var myCharts = [
+                {
+                    'type': 'bar',
+                    'title': 'Fruit Consumption',
+                    'xAxis': {
+                        'title': 'Fruit',
+                        'categories': ['Apples', 'Bananas', 'Oranges']
+                    },
+                    'yAxis': {
+                        'title': 'Fruit Eaten'
+                    },
+                    'dataPoints': [
+                        {
+                            'name': 'Jane',
+                            'data': [1, 0, 4]
+                        },
+                        {
+                            'name': 'John',
+                            'data': [5, 7, 3]
+                        },
+                        {
+                            'name': 'Peter',
+                            'data': [4, 3, 8]
+                        },
+                    ]
+                },
+                {
+                    'type': 'pie',
+                    'title': 'Browser Share',
+                    'yAxis': {
+                        'title': 'Browser'
+                    },
+                    'dataPoints': [
+                        {
+                            'name': 'Chrome',
+                            'y': 50,
+                            sliced: true,
+                            selected: true
+                        },
+                        {
+                            'name': 'IE',
+                            'y': 10
+                        },
+                        {
+                            'name': 'Firefox',
+                            'y': 40
+                        },
+                    ]
+                }
+            ];
+
+            for (i = 0; i < myCharts.length; i++) {
+                switch (myCharts[i].type) {
+                    case 'bar':
+                        var mychart = Highcharts.chart('container-1-' + (i + 1), {
+                            chart: {
+                                type: myCharts[i].type
+                            },
+                            title: {
+                                useHTML: true,
+                                align: 'left',
+                                text: '<div>' + myCharts[i].title + '</div>'
+                            },
+                            xAxis: {
+                                title: {
+                                    text: myCharts[i].xAxis.title
+                                },
+                                categories: myCharts[i].xAxis.categories
+                            },
+                            yAxis: {
+                                title: {
+                                    text: myCharts[i].yAxis.title
+                                }
+                            },
+                            series: myCharts[i].dataPoints,
+                            navigation: {
+                                menuItemStyle: {
+                                    fontWeight: 'normal',
+                                    background: 'none'
+                                },
+                                menuItemHoverStyle: {
+                                    fontWeight: 'bold',
+                                    background: 'none',
+                                    color: 'black'
+                                }
+                            }
+                        });
+                        break;
+                    case 'pie':
+                        var mychart = Highcharts.chart('container-1-' + (i + 1), {
+                            chart: {
+                                type: myCharts[i].type
+                            },
+                            title: {
+                                useHTML: true,
+                                align: 'left',
+                                text: '<div>' + myCharts[i].title + '</div>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: false
+                                    },
+                                    showInLegend: 'true'
+                                }
+                            },
+                            series: [{
+                                name: myCharts[i].yAxis.title,
+                                colorByPoint: true,
+                                data: myCharts[i].dataPoints
+                            }],
+                            navigation: {
+                                menuItemStyle: {
+                                    fontWeight: 'normal',
+                                    background: 'none'
+                                },
+                                menuItemHoverStyle: {
+                                    fontWeight: 'bold',
+                                    background: 'none',
+                                    color: 'black'
+                                }
+                            }
+                        });
+                        break;
+                }
+                
+            }
+
+            //var mychart = Highcharts.chart('container-1-1', {
+            //    chart: {
+            //        type: 'bar'
+            //    },
+            //    title: {
+            //        text: 'Fruit Consumption'
+            //    },
+            //    xAxis: {
+            //        categories: ['Apples', 'Bananas', 'Oranges']
+            //    },
+            //    yAxis: {
+            //        title: {
+            //            text: 'Fruit Eaten'
+            //        }
+            //    },
+            //    series: [{
+            //        name: 'Jane',
+            //        data: [1, 0, 4]
+            //    },
+            //    {
+            //        name: 'John',
+            //        data: [5, 7, 3]
+            //    }]
+            //});
+        })
+    </script>
+}
